@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         python-version:
-          - "{ PYTHON_VERSION }"
+          - "3.11"
     steps:
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
