@@ -1,0 +1,24 @@
+[project]
+name = "my-super-project"
+version = "0.1.0"
+description = "This is my super project that does amazing things."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">={ PYTHON VERSION }"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "isort>=6.0.1",
+    "pytest>=8.4.2",
+    "pytest-cov>=7.0.0",
+    "pytest-mypy-plugins>=3.2.0",
+    "ruff>=0.13.0",
+    "ty>=0.0.1a20",
+]
+
+[tool.pytest.ini_options]
+addopts = "--cov=tpc_plugin_validator --cov-report term-missing --cov-report xml:coverage.xml"
+
+[tool.isort]
+py_version={ PYTHON VERSION NO DOT }
