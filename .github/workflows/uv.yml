@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         python-version:
-          - "{ PYTHON_VERSION }"
+          - "3.11"
     steps:
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
@@ -28,12 +28,16 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Set up Python
         run: uv python install
-      - name: Run pyTest
+      - name: pyTest
         run: uv run pytest tests
-      - name: Run Ruff
+      - name: Ruff (check)
         run: uv run ruff check
-      - name: Run Ty
+      - name: Ruff (format)
+        run: uv run ruff format --diff --check
+      - name: Ty
         run: uv run ty check
+      - name: Troml
+        run: uv run troml check
       - name: Run SonarQube
         uses: sonarsource/sonarqube-scan-action@fd88b7d7ccbaefd23d8f36f73b59db7a3d246602
         env:

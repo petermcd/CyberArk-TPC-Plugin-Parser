@@ -1,24 +1,34 @@
 [project]
-name = "my-super-project"
+name = "cyberark-tpc-plugin-parser"
 version = "0.1.0"
-description = "This is my super project that does amazing things."
+description = "A package to help parse CyberArk TPC plugin prompts and process files."
+authors = [{ name = "Peter McDonald", email = "git@petermcdonald.co.uk"}]
 readme = "README.md"
 license = { file = "LICENSE" }
-requires-python = ">={ PYTHON VERSION }"
+requires-python = ">=3.11"
+
+classifiers = [
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: 3.15",
+]
+
 dependencies = []
 
 [dependency-groups]
 dev = [
-    "isort>=6.0.1",
     "pytest>=8.4.2",
     "pytest-cov>=7.0.0",
-    "pytest-mypy-plugins>=3.2.0",
     "ruff>=0.13.0",
+    "troml>=0.4.1",
     "ty>=0.0.1a20",
 ]
 
 [tool.pytest.ini_options]
-addopts = "--cov=tpc_plugin_validator --cov-report term-missing --cov-report xml:coverage.xml"
+addopts = "--cov=tpc_plugin_parser --cov-report term-missing --cov-report xml:coverage.xml"
 
-[tool.isort]
-py_version={ PYTHON VERSION NO DOT }
+[tool.ruff]
+line-length = 120

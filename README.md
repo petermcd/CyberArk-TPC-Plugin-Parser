@@ -1,25 +1,34 @@
-# Welcome to your brand-new repository
+# CyberArk TPC Plugin Parser
 
-Welcome to your brand-new Python repository. This repository is intended to be used as a starting point for your Python
-projects.
+CyberArk TPC Plugin Parser is a package intended to make it easy to work with CyberArk process
+and platform ini files.
 
-The repository contains a setup.sh file. Running this will carry out the following tasks:
+The lexer and parser breaks down the files to their constituent parts so that they can be
+further processed by other applications.
 
-* Set up the licence file with your name and the current year.
-* Set up or remove the funding links in GitHub.
-* Update bug and feature request issue templates with the specified handlers username.
-* Set up SonarQube with your server details or remove the configuration files if you are not using SonarQube.
-* Delete the setup.sh file.
+## Installation
 
-Things you should do:
+CyberArk TPC Plugin Parser can be installed using Pip:
 
-* Update pyproject.toml with your project details.
-* Update the `README.md` file to describe your project.
+```bash
+pip install cyberark-tpc-plugin-parser
+```
 
-This template assumes that you will be using uv for project management and GitHub workflows.
+## Usage
 
-##
+The main point of entry is the parser, this takes the content of the process and prompts
+files as arguments:
 
-The following are a few things that I plan to do to extend this template:
+```python
+from tpc_plugin_parser.parser import Parser
 
-* Update the bash script so that the SonarQube section is removed from uv.yml
+with open('/path/to/files/process.ini') as process_fh:
+    process_content: str = process_fh.read()
+    
+with open('/path/to/files/prompts.ini') as prompts_fh:
+    prompts_content: str = prompts_fh.read()
+
+parser: Parser = Parser(process_file=process_content, prompts_file=prompts_content)
+process_file_tokens = parser.process_file
+prompt_file_tokens = parser.prompts_file
+```
