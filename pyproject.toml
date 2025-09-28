@@ -23,9 +23,9 @@ classifiers = [
 dependencies = []
 
 [project.urls]
-Homepage = "https://github.com/petermcd/CyberArk-TPC-Plugin-Parser"
-Repository = "https://github.com/petermcd/CyberArk-TPC-Plugin-Parser.git"
-Issues = "https://github.com/petermcd/CyberArk-TPC-Plugin-Parser/issues"
+homepage = "https://github.com/petermcd/CyberArk-TPC-Plugin-Parser"
+repository = "https://github.com/petermcd/CyberArk-TPC-Plugin-Parser.git"
+issues = "https://github.com/petermcd/CyberArk-TPC-Plugin-Parser/issues"
 
 [dependency-groups]
 dev = [
