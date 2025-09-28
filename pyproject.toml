@@ -1,22 +1,31 @@
 [project]
 name = "cyberark-tpc-plugin-parser"
-version = "0.1.0"
+version = "0.1.1"
 description = "A package to help parse CyberArk TPC plugin prompts and process files."
+keywords = ["cyberark", "parser", "tpc"]
 authors = [{ name = "Peter McDonald", email = "git@petermcdonald.co.uk"}]
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.11"
 
 classifiers = [
-  "Programming Language :: Python",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
-  "Programming Language :: Python :: 3.13",
-  "Programming Language :: Python :: 3.14",
-  "Programming Language :: Python :: 3.15",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
+    "Topic :: Software Development :: Testing",
+    "Typing :: Typed",
 ]
 
 dependencies = []
+
+[project.urls]
+homepage = "https://github.com/petermcd/CyberArk-TPC-Plugin-Parser"
+repository = "https://github.com/petermcd/CyberArk-TPC-Plugin-Parser.git"
+issues = "https://github.com/petermcd/CyberArk-TPC-Plugin-Parser/issues"
 
 [dependency-groups]
 dev = [
