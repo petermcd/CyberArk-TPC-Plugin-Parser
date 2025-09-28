@@ -59,7 +59,7 @@ class Parser(object):
         for lexed_line in lexed_file.tokens:
             if lexed_line[0] == TokenName.SECTION_HEADER:
                 sorted_lex[current_section_name] = section_entries
-                if type(lexed_line[1]) is SectionHeader:
+                if isinstance(lexed_line[1], SectionHeader):
                     current_section_name = lexed_line[1].name
                 else:
                     # This should never be reached, this is here to satisfy typing.

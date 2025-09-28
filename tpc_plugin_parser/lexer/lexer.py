@@ -99,9 +99,9 @@ class Lexer(object):
 
         :param match: Regex match of the assignment.
         """
-        name: str = str(match["name"]).strip()
-        equals = str(match["equals"]).strip() if match.groupdict().get("equals", None) else None
-        assigned_stripped = str(match["value"]).strip() if match.groupdict().get("value", None) else None
+        name: str = str(match.group("name")).strip()
+        equals = str(match.group("equals")).strip() if match.groupdict().get("equals", None) else None
+        assigned_stripped = str(match.group("value")).strip() if match.groupdict().get("value", None) else None
         assigned = assigned_stripped or None
         self._tokens.append(
             (
@@ -125,7 +125,7 @@ class Lexer(object):
             (
                 TokenName.COMMENT,
                 Comment(
-                    content=str(match["comment"]).strip(),
+                    content=str(match.group("comment")).strip(),
                     line_number=line_number,
                 ),
             )
@@ -138,16 +138,16 @@ class Lexer(object):
         :param match: Regex match of the parameter validation.
         """
         allow_characters: str | None = None
-        if match["allowcharacters"]:
-            allow_characters = str(match["allowcharacters"]).strip()
+        if match.group("allowcharacters"):
+            allow_characters = str(match.group("allowcharacters") ).strip()
 
         self._tokens.append(
             (
                 TokenName.CPM_PARAMETER_VALIDATION,
                 CPMParameterValidation(
-                    name=str(match["name"]),
-                    source=str(match["source"]),
-                    mandatory=str(match["mandatory"]),
+                    name=str(match.group("name")),
+                    source=str(match.group("source")),
+                    mandatory=str(match.group("mandatory")),
                     allow_characters=allow_characters,
                     line_number=line_number,
                 ),
@@ -164,9 +164,9 @@ class Lexer(object):
             (
                 TokenName.FAIL_STATE,
                 FailState(
-                    name=str(match["name"]).strip(),
-                    message=str(match["message"]).strip(),
-                    code=int(match["code"]),
+                    name=str(match.group("name")).strip(),
+                    message=str(match.group("message")).strip(),
+                    code=int(match.group("code")),
                     line_number=line_number,
                 ),
             )
@@ -199,7 +199,7 @@ class Lexer(object):
             (
                 TokenName.SECTION_HEADER,
                 SectionHeader(
-                    name=str(match["name"].strip()),
+                    name=str(match.group("name").strip()),
                     line_number=line_number,
                 ),
             )
@@ -215,9 +215,9 @@ class Lexer(object):
             (
                 TokenName.TRANSITION,
                 Transition(
-                    current_state=str(match["current"]).strip(),
-                    condition=str(match["condition"]).strip(),
-                    next_state=str(match["next"]).strip(),
+                    current_state=str(match.group("current")).strip(),
+                    condition=str(match.group("condition")).strip(),
+                    next_state=str(match.group("next")).strip(),
                     line_number=line_number,
                 ),
             )
