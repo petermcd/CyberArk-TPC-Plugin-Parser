@@ -139,7 +139,7 @@ class Lexer(object):
         """
         allow_characters: str | None = None
         if match.group("allowcharacters"):
-            allow_characters = str(match.group("allowcharacters") ).strip()
+            allow_characters = str(match.group("allowcharacters")).strip()
 
         self._tokens.append(
             (
