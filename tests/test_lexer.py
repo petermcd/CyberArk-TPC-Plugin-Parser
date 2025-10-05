@@ -26,7 +26,6 @@ class TestLexer(object):
                         CPMParameterValidation(
                             line_number=1,
                             name="password",
-                            name_normalised="password",
                             source="FILE",
                             mandatory='![string equal -nocase "<username>" ""]',
                             allow_characters="abc",
@@ -43,7 +42,6 @@ class TestLexer(object):
                         Assignment(
                             line_number=1,
                             name="TestVar",
-                            name_normalised="testvar",
                             equals=None,
                             assigned=None,
                         ),
@@ -58,7 +56,6 @@ class TestLexer(object):
                         Assignment(
                             line_number=1,
                             name="testvar",
-                            name_normalised="testvar",
                             equals="=",
                             assigned=None,
                         ),
@@ -73,7 +70,6 @@ class TestLexer(object):
                         Assignment(
                             line_number=1,
                             name="test_var",
-                            name_normalised="test_var",
                             equals="=",
                             assigned="123",
                         ),
@@ -111,7 +107,6 @@ class TestLexer(object):
                         TokenName.FAIL_STATE,
                         FailState(
                             name="standard",
-                            name_normalised="standard",
                             line_number=1,
                             message="'This is a standard fail state'",
                             code=1234,
@@ -126,7 +121,6 @@ class TestLexer(object):
                         TokenName.FAIL_STATE,
                         FailState(
                             name="standard",
-                            name_normalised="standard",
                             line_number=1,
                             message="'This is a standard fail state, isn't it?'",
                             code=2468,
@@ -141,7 +135,6 @@ class TestLexer(object):
                         TokenName.FAIL_STATE,
                         FailState(
                             name="standard",
-                            name_normalised="standard",
                             line_number=1,
                             message="This is a standard fail state, isn't it?",
                             code=2468,
@@ -216,7 +209,6 @@ class TestLexer(object):
                         Assignment(
                             line_number=3,
                             name="TestVar",
-                            name_normalised="testvar",
                             equals=None,
                             assigned=None,
                         ),

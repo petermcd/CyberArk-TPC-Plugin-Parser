@@ -100,7 +100,6 @@ class Lexer(object):
         :param match: Regex match of the assignment.
         """
         name: str = str(match["name"]).strip()
-        name_normalised: str = name.lower()
         equals = str(match["equals"]).strip() if match.groupdict().get("equals", None) else None
         assigned_stripped = str(match["value"]).strip() if match.groupdict().get("value", None) else None
         assigned = assigned_stripped or None
@@ -109,7 +108,6 @@ class Lexer(object):
                 TokenName.ASSIGNMENT,
                 Assignment(
                     name=name,
-                    name_normalised=name_normalised,
                     equals=equals,
                     assigned=assigned,
                     line_number=line_number,
@@ -145,7 +143,6 @@ class Lexer(object):
                 TokenName.CPM_PARAMETER_VALIDATION,
                 CPMParameterValidation(
                     name=str(match["name"]),
-                    name_normalised=str(match["name"]).lower(),
                     source=str(match["source"]),
                     mandatory=str(match["mandatory"]),
                     allow_characters=allow_characters,
@@ -165,7 +162,6 @@ class Lexer(object):
                 TokenName.FAIL_STATE,
                 FailState(
                     name=str(match["name"]).strip(),
-                    name_normalised=str(match["name"]).strip().lower(),
                     message=str(match["message"]).strip(),
                     code=int(match["code"]),
                     line_number=line_number,

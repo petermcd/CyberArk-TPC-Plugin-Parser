@@ -11,8 +11,17 @@ class CPMParameterValidation(object):
 
     line_number: int
     name: str
-    name_normalised: str
     source: str
     mandatory: str
     allow_characters: str | None = None
     token_name: str = TokenName.CPM_PARAMETER_VALIDATION.value
+
+    @property
+    def name_normalised(self) -> str:
+        """
+        Normalised version of the name.
+
+        Returns:
+            str: Normalised name.
+        """
+        return self.name.lower()
