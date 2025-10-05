@@ -11,6 +11,7 @@ class Assignment(object):
 
     line_number: int
     name: str
+    name_normalised: str
     equals: str | None = None
     assigned: str | None = None
     token_name: str = TokenName.ASSIGNMENT.value

@@ -1,6 +1,6 @@
 [project]
 name = "cyberark-tpc-plugin-parser"
-version = "0.1.1"
+version = "0.2.0"
 description = "A package to help parse CyberArk TPC plugin prompts and process files."
 keywords = ["cyberark", "parser", "tpc"]
 authors = [{ name = "Peter McDonald", email = "git@petermcdonald.co.uk"}]

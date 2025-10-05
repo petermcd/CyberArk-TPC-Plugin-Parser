@@ -11,6 +11,7 @@ class FailState(object):
 
     line_number: int
     name: str
+    name_normalised: str
     message: str
     code: int
     token_name: str = TokenName.FAIL_STATE.value

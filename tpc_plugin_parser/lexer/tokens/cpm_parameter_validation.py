@@ -11,6 +11,7 @@ class CPMParameterValidation(object):
 
     line_number: int
     name: str
+    name_normalised: str
     source: str
     mandatory: str
     allow_characters: str | None = None
