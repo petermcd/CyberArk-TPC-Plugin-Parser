@@ -14,3 +14,13 @@ class Assignment(object):
     equals: str | None = None
     assigned: str | None = None
     token_name: str = TokenName.ASSIGNMENT.value
+
+    @property
+    def name_normalised(self) -> str:
+        """
+        Normalised version of the name.
+
+        Returns:
+            str: Normalised name.
+        """
+        return self.name.lower()

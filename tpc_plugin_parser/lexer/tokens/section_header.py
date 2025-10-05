@@ -12,3 +12,13 @@ class SectionHeader(object):
     line_number: int
     name: str
     token_name: str = TokenName.SECTION_HEADER.value
+
+    @property
+    def name_normalised(self) -> str:
+        """
+        Normalised version of the name.
+
+        Returns:
+            str: Normalised name.
+        """
+        return self.name.lower()

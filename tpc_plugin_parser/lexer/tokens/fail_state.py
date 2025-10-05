@@ -14,3 +14,13 @@ class FailState(object):
     message: str
     code: int
     token_name: str = TokenName.FAIL_STATE.value
+
+    @property
+    def name_normalised(self) -> str:
+        """
+        Normalised version of the name.
+
+        Returns:
+            str: Normalised name.
+        """
+        return self.name.lower()
