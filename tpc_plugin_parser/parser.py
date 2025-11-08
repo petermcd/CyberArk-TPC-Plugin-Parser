@@ -9,9 +9,7 @@ from tpc_plugin_parser.lexer.utilities.types import ALL_TOKEN_TYPES
 class Parser(object):
     """Object to handle parsing ini files."""
 
-    __slots__ = (
-        "_file",
-    )
+    __slots__ = ("_file",)
 
     def __init__(self, file_contents: str) -> None:
         """

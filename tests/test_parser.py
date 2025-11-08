@@ -32,7 +32,6 @@ class TestParser(object):
         assert len(parser.parsed_file["parameters"]) == 5
         assert len(parser.parsed_file["Debug Information"]) == 7
 
-
     @pytest.mark.parametrize(
         "target_file",
         [
