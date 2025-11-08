@@ -124,10 +124,7 @@ class Lexer(object):
         self._tokens.append(
             (
                 TokenName.COMMENT,
-                Comment(
-                    content=str(match.group("comment")).strip(),
-                    line_number=line_number,
-                ),
+                Comment(content=str(match["comment"]).strip(), line_number=line_number),
             )
         )
 

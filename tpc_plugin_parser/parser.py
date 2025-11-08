@@ -30,7 +30,7 @@ class Parser(object):
         self._file = self._process_lex(lexed_file=lexed_process)
 
     @staticmethod
-    def _process_lex(lexed_file: Lexer):
+    def _process_lex(lexed_file: Lexer) -> dict[str, list[ALL_TOKEN_TYPES]]:
         """
         Process a lex and return the results.
 
@@ -56,7 +56,7 @@ class Parser(object):
         return sorted_lex
 
     @property
-    def parsed_file(self):
+    def parsed_file(self) -> dict[str, list[ALL_TOKEN_TYPES]]:
         """
         Returns the parsed file.
 
