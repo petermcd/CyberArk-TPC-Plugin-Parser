@@ -8,37 +8,47 @@ class TestParser(object):
     """Test the lexer."""
 
     @pytest.mark.parametrize(
-        "process_file,prompts_file",
+        "target_file",
         [
-            (
-                "tests/data/process.ini",
-                "tests/data/prompts.ini",
-            ),
+            "tests/data/process.ini",
         ],
     )
-    def test_parser(self, process_file: str, prompts_file: str) -> None:
+    def test_process(self, target_file: str) -> None:
         """
-        Test to ensure that a token parses ok.
+        Test to ensure that process file tokens parses ok.
 
-        :param process_file: Path to the process file.
-        :param prompts_file: Path to the prompts file.
+        :param target_file: Path to the file.
         """
-        with open(process_file, "r") as process_file:
-            process_content = process_file.read()
+        with open(target_file, "r") as file_handler:
+            file_content = file_handler.read()
 
-        with open(prompts_file, "r") as prompts_file:
-            prompts_content = prompts_file.read()
+        parser = Parser(file_contents=file_content)
 
-        parser = Parser(process_file=process_content, prompts_file=prompts_content)
+        assert len(parser.parsed_file) == 6
+        assert len(parser.parsed_file["default"]) == 6
+        assert len(parser.parsed_file["states"]) == 8
+        assert len(parser.parsed_file["transitions"]) == 7
+        assert len(parser.parsed_file["CPM Parameters Validation"]) == 5
+        assert len(parser.parsed_file["parameters"]) == 5
+        assert len(parser.parsed_file["Debug Information"]) == 7
 
-        assert len(parser.process_file) == 6
-        assert len(parser.process_file["default"]) == 6
-        assert len(parser.process_file["states"]) == 8
-        assert len(parser.process_file["transitions"]) == 7
-        assert len(parser.process_file["CPM Parameters Validation"]) == 5
-        assert len(parser.process_file["parameters"]) == 5
-        assert len(parser.process_file["Debug Information"]) == 7
+    @pytest.mark.parametrize(
+        "target_file",
+        [
+            "tests/data/prompts.ini",
+        ],
+    )
+    def test_prompts(self, target_file: str) -> None:
+        """
+        Test to ensure that prompts file tokens parses ok.
 
-        assert len(parser.prompts_file) == 2
-        assert len(parser.prompts_file["default"]) == 6
-        assert len(parser.prompts_file["conditions"]) == 8
+        :param target_file: Path to the file.
+        """
+        with open(target_file, "r") as file_handler:
+            file_content = file_handler.read()
+
+        parser = Parser(file_contents=file_content)
+
+        assert len(parser.parsed_file) == 2
+        assert len(parser.parsed_file["default"]) == 6
+        assert len(parser.parsed_file["conditions"]) == 8
