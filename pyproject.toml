@@ -1,6 +1,6 @@
 [project]
 name = "cyberark-tpc-plugin-parser"
-version = "0.3.1"
+version = "0.4.0"
 description = "A package to help parse CyberArk TPC plugin prompts and process files."
 keywords = ["cyberark", "parser", "tpc"]
 authors = [{ name = "Peter McDonald", email = "git@petermcdonald.co.uk"}]
@@ -29,7 +29,9 @@ issues = "https://github.com/petermcd/CyberArk-TPC-Plugin-Parser/issues"
 
 [dependency-groups]
 dev = [
-    "pytest>=8.4.2",
+    "pip-audit>=2.9.0",
+    "pygments>=2.20.0",
+    "pytest>=9.0.3",
     "pytest-cov>=7.0.0",
     "ruff>=0.13.0",
     "troml>=0.4.1",

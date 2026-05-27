@@ -1,6 +1,6 @@
 """Module for aggregating all token types used in the lexer."""
 
-from typing import TypedDict
+from typing import Callable, TypedDict
 import re
 
 from tpc_plugin_parser.lexer.tokens.assignment import Assignment
@@ -20,4 +20,4 @@ ALL_TOKEN_TYPES = Assignment | Comment | FailState | CPMParameterValidation | Pa
 class TokenSpecs(TypedDict):
     pattern: re.Pattern
     token_name: TokenName
-    processor_method: str
+    processor: Callable[[re.Match, int], None]
