@@ -1,5 +1,6 @@
 """Lexer module for reading and processing configuration files."""
 
+import logging
 import re
 
 from tpc_plugin_parser.lexer.tokens.assignment import Assignment
@@ -22,6 +23,9 @@ from tpc_plugin_parser.lexer.utilities.regex import (
 from tpc_plugin_parser.lexer.utilities.token_name import TokenName
 from tpc_plugin_parser.lexer.utilities.types import ALL_TOKEN_TYPES, TokenSpecs
 
+_MAX_SOURCE_BYTES: int = 1 * 1024 * 1024  # 1 MiB
+_log = logging.getLogger(__name__)
+
 
 class Lexer(object):
     """Object to handle processing the ini files."""
@@ -35,6 +39,9 @@ class Lexer(object):
     def __init__(self, source: str) -> None:
         """Standard init for the Lexer object."""
 
+        if len(source.encode()) > _MAX_SOURCE_BYTES:
+            raise ValueError(f"Source exceeds the maximum allowed size of {_MAX_SOURCE_BYTES} bytes")
+
         self._tokens: list[
             tuple[
                 TokenName,
@@ -46,32 +53,32 @@ class Lexer(object):
             {
                 "pattern": re.compile(COMMENT, re.IGNORECASE),
                 "token_name": TokenName.COMMENT,
-                "processor_method": "_process_comment",
+                "processor": self._process_comment,
             },
             {
                 "pattern": re.compile(CPM_PARAMETER_VALIDATION, re.IGNORECASE),
                 "token_name": TokenName.CPM_PARAMETER_VALIDATION,
-                "processor_method": "_process_cpm_parameter_validation",
+                "processor": self._process_cpm_parameter_validation,
             },
             {
                 "pattern": re.compile(FAIL_STATE, re.IGNORECASE),
                 "token_name": TokenName.FAIL_STATE,
-                "processor_method": "_process_fail_state",
+                "processor": self._process_fail_state,
             },
             {
                 "pattern": re.compile(SECTION_HEADER, re.IGNORECASE),
                 "token_name": TokenName.SECTION_HEADER,
-                "processor_method": "_process_section_header",
+                "processor": self._process_section_header,
             },
             {
                 "pattern": re.compile(TRANSITION, re.IGNORECASE),
                 "token_name": TokenName.TRANSITION,
-                "processor_method": "_process_transitions",
+                "processor": self._process_transitions,
             },
             {
                 "pattern": re.compile(ASSIGNMENT, re.IGNORECASE),
                 "token_name": TokenName.ASSIGNMENT,
-                "processor_method": "_process_assignment",
+                "processor": self._process_assignment,
             },
         ]
 
@@ -87,7 +94,7 @@ class Lexer(object):
         for line_number, line in enumerate(self._source.splitlines(), start=1):
             for token_spec in self._token_specs:
                 if match := token_spec["pattern"].match(line):
-                    getattr(self, token_spec["processor_method"])(match=match, line_number=line_number)
+                    token_spec["processor"](match=match, line_number=line_number)
                     break
             else:
                 if line.strip():
@@ -157,13 +164,16 @@ class Lexer(object):
 
         :param match: Regex match of the fail state.
         """
+        code = int(match.group("code"))
+        if not (0 <= code <= 65535):
+            raise ValueError(f"Fail-state error code {code} is outside the valid range 0–65535")
         self._tokens.append(
             (
                 TokenName.FAIL_STATE,
                 FailState(
                     name=str(match.group("name")).strip(),
                     message=str(match.group("message")).strip(),
-                    code=int(match.group("code")),
+                    code=code,
                     line_number=line_number,
                 ),
             )
@@ -176,6 +186,7 @@ class Lexer(object):
         :param line: The line that has the parse error.
         :param line_number: The line number of the line that has the parse error.
         """
+        _log.warning("Unrecognised content at line %d — recorded as ParseError token", line_number)
         self._tokens.append(
             (
                 TokenName.PARSE_ERROR,

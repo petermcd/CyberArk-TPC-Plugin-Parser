@@ -1,8 +1,6 @@
 """List of regex the lexer uses."""
 
-ASSIGNMENT: str = (
-    r"^(?:[\s]*)(?P<name>[\w]+)(?:(?:[\s]*)(?P<equals>=)(?:(?:[\s]*)(?P<value>[^\r\n]*))?)?(?:[\s]*)$"
-)
+ASSIGNMENT: str = r"^(?:[\s]*)(?P<name>[\w]+)(?:(?:[\s]*)(?P<equals>=)(?:(?:[\s]*)(?P<value>[^\r\n]*))?)?(?:[\s]*)$"
 COMMENT: str = r"^(?:[\s]*)(?P<comment>(?:[#;]+)(?:.*))(?:[\s]*)$"
 CPM_PARAMETER_VALIDATION: str = (
     r"^(?:[\s]*)(?P<name>[\w\\]+)(?:(?:[\s]*,[\s]*)(?:source)(?:[\s]*)=(?:[\s]*)"
