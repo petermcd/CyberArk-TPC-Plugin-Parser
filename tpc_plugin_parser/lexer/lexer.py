@@ -44,11 +44,6 @@ class Lexer(object):
         self._source: str = source
         self._token_specs: list[TokenSpecs] = [
             {
-                "pattern": re.compile(ASSIGNMENT, re.IGNORECASE),
-                "token_name": TokenName.ASSIGNMENT,
-                "processor_method": "_process_assignment",
-            },
-            {
                 "pattern": re.compile(COMMENT, re.IGNORECASE),
                 "token_name": TokenName.COMMENT,
                 "processor_method": "_process_comment",
@@ -72,6 +67,11 @@ class Lexer(object):
                 "pattern": re.compile(TRANSITION, re.IGNORECASE),
                 "token_name": TokenName.TRANSITION,
                 "processor_method": "_process_transitions",
+            },
+            {
+                "pattern": re.compile(ASSIGNMENT, re.IGNORECASE),
+                "token_name": TokenName.ASSIGNMENT,
+                "processor_method": "_process_assignment",
             },
         ]
 
