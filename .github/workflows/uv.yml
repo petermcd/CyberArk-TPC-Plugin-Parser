@@ -30,6 +30,8 @@ jobs:
         run: uv python install
       - name: pyTest
         run: uv run pytest tests
+      - name: pip-audit
+        run: uv run pip-audit
       - name: Ruff (check)
         run: uv run ruff check
       - name: Ruff (format)
