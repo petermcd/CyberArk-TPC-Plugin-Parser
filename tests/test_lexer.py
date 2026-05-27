@@ -1,7 +1,7 @@
 """Test the lexer."""
 
 import pytest
-from tpc_plugin_parser.lexer.lexer import Lexer
+from tpc_plugin_parser.lexer.lexer import Lexer, _MAX_SOURCE_BYTES
 from tpc_plugin_parser.lexer.tokens.assignment import Assignment
 from tpc_plugin_parser.lexer.tokens.comment import Comment
 from tpc_plugin_parser.lexer.tokens.cpm_parameter_validation import CPMParameterValidation
@@ -261,3 +261,14 @@ class TestLexer(object):
         assert len(found_tokens) == len(expected_tokens)
         assert found_tokens[0][1].content == expected_tokens[0].content
         assert found_tokens[0][1].line_number == expected_tokens[0].line_number
+
+    def test_source_exceeding_size_limit_raises(self) -> None:
+        """Test that a source string larger than _MAX_SOURCE_BYTES raises ValueError."""
+        oversized = "x" * (_MAX_SOURCE_BYTES + 1)
+        with pytest.raises(ValueError, match="maximum allowed size"):
+            Lexer(source=oversized)
+
+    def test_fail_state_code_out_of_range_raises(self) -> None:
+        """Test that a fail-state error code outside 0–65535 raises ValueError."""
+        with pytest.raises(ValueError, match="valid range"):
+            Lexer(source="state=fail(message, 65536)").tokens
