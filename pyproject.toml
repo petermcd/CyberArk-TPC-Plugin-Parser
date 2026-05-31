@@ -6,7 +6,7 @@ keywords = ["cyberark", "parser", "tpc"]
 authors = [{ name = "Peter McDonald", email = "git@petermcdonald.co.uk"}]
 readme = "README.md"
 license = { file = "LICENSE" }
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 
 classifiers = [
     "Intended Audience :: Developers",
