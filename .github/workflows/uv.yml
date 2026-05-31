@@ -8,6 +8,13 @@ on:
     branches:
       - main
 
+env:
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+permissions:
+  contents: read # Allows actions/checkout to read the repository contents.
+
 jobs:
   uv:
     name: python
