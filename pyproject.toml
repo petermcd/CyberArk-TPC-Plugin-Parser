@@ -33,6 +33,7 @@ dev = [
     "click>=8.3.3", # Pinned to resolve security issue
     "cosmic-ray>=8.4.6",
     "msgpack>=1.2.1", # Pinned to resolve security issue
+    "pip>=26.1.2", # Pinned to resolve security issue
     "pip-audit>=2.9.0",
     "pygments>=2.20.0",
     "pytest>=9.0.3",
