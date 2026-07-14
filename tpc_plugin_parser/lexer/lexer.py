@@ -26,6 +26,13 @@ from tpc_plugin_parser.lexer.utilities.types import ALL_TOKEN_TYPES, TokenSpecs
 _MAX_SOURCE_BYTES: int = 1 * 1024 * 1024  # 1 MiB
 _log = logging.getLogger(__name__)
 
+_ASSIGNMENT_RE = re.compile(ASSIGNMENT, re.IGNORECASE)
+_COMMENT_RE = re.compile(COMMENT, re.IGNORECASE)
+_CPM_PARAMETER_VALIDATION_RE = re.compile(CPM_PARAMETER_VALIDATION, re.IGNORECASE)
+_FAIL_STATE_RE = re.compile(FAIL_STATE, re.IGNORECASE)
+_SECTION_HEADER_RE = re.compile(SECTION_HEADER, re.IGNORECASE)
+_TRANSITION_RE = re.compile(TRANSITION, re.IGNORECASE)
+
 
 class Lexer(object):
     """Object to handle processing the ini files."""
@@ -51,34 +58,36 @@ class Lexer(object):
         self._source: str = source
         self._token_specs: list[TokenSpecs] = [
             {
-                "pattern": re.compile(COMMENT, re.IGNORECASE),
-                "token_name": TokenName.COMMENT,
-                "processor": self._process_comment,
-            },
-            {
-                "pattern": re.compile(CPM_PARAMETER_VALIDATION, re.IGNORECASE),
-                "token_name": TokenName.CPM_PARAMETER_VALIDATION,
-                "processor": self._process_cpm_parameter_validation,
-            },
-            {
-                "pattern": re.compile(FAIL_STATE, re.IGNORECASE),
+                # Must precede ASSIGNMENT: "name = fail(...)" also matches the
+                # more general assignment pattern.
+                "pattern": _FAIL_STATE_RE,
                 "token_name": TokenName.FAIL_STATE,
                 "processor": self._process_fail_state,
             },
             {
-                "pattern": re.compile(SECTION_HEADER, re.IGNORECASE),
+                "pattern": _ASSIGNMENT_RE,
+                "token_name": TokenName.ASSIGNMENT,
+                "processor": self._process_assignment,
+            },
+            {
+                "pattern": _COMMENT_RE,
+                "token_name": TokenName.COMMENT,
+                "processor": self._process_comment,
+            },
+            {
+                "pattern": _CPM_PARAMETER_VALIDATION_RE,
+                "token_name": TokenName.CPM_PARAMETER_VALIDATION,
+                "processor": self._process_cpm_parameter_validation,
+            },
+            {
+                "pattern": _SECTION_HEADER_RE,
                 "token_name": TokenName.SECTION_HEADER,
                 "processor": self._process_section_header,
             },
             {
-                "pattern": re.compile(TRANSITION, re.IGNORECASE),
+                "pattern": _TRANSITION_RE,
                 "token_name": TokenName.TRANSITION,
                 "processor": self._process_transitions,
-            },
-            {
-                "pattern": re.compile(ASSIGNMENT, re.IGNORECASE),
-                "token_name": TokenName.ASSIGNMENT,
-                "processor": self._process_assignment,
             },
         ]
 
@@ -104,11 +113,11 @@ class Lexer(object):
         """
         Process a variable assignment line
 
-        :param match: Regex match of the assignment.
+        :param match: Regex matches of the assignment.
         """
-        name: str = str(match.group("name")).strip()
-        equals = str(match.group("equals")).strip() if match.groupdict().get("equals", None) else None
-        assigned_stripped = str(match.group("value")).strip() if match.groupdict().get("value", None) else None
+        name: str = str(match["name"]).strip()
+        equals = str(match["equals"]).strip() if match.groupdict().get("equals", None) else None
+        assigned_stripped = str(match["value"]).strip() if match.groupdict().get("value", None) else None
         assigned = assigned_stripped or None
         self._tokens.append(
             (
@@ -126,7 +135,7 @@ class Lexer(object):
         """
         Process the provided comment.
 
-        :param match: Regex match of the comment.
+        :param match: Regex matches of the comment.
         """
         self._tokens.append(
             (
@@ -137,21 +146,21 @@ class Lexer(object):
 
     def _process_cpm_parameter_validation(self, match: re.Match, line_number: int) -> None:
         """
-        Process the provided parameter validation.
+        Process provided parameter validation.
 
-        :param match: Regex match of the parameter validation.
+        :param match: Regex matches of the parameter validation.
         """
         allow_characters: str | None = None
-        if match.group("allowcharacters"):
-            allow_characters = str(match.group("allowcharacters")).strip()
+        if match["allowcharacters"]:
+            allow_characters = str(match["allowcharacters"]).strip()
 
         self._tokens.append(
             (
                 TokenName.CPM_PARAMETER_VALIDATION,
                 CPMParameterValidation(
-                    name=str(match.group("name")),
-                    source=str(match.group("source")),
-                    mandatory=str(match.group("mandatory")),
+                    name=str(match["name"]),
+                    source=str(match["source"]),
+                    mandatory=str(match["mandatory"]),
                     allow_characters=allow_characters,
                     line_number=line_number,
                 ),
@@ -160,19 +169,20 @@ class Lexer(object):
 
     def _process_fail_state(self, match: re.Match, line_number: int) -> None:
         """
-        Process the provided fail state .
+        Process the provided fail state.
 
         :param match: Regex match of the fail state.
         """
-        code = int(match.group("code"))
+        code = int(match["code"])
         if not (0 <= code <= 65535):
+            _log.warning("Fail-state error code %d at line %d", code, line_number)
             raise ValueError(f"Fail-state error code {code} is outside the valid range 0–65535")
         self._tokens.append(
             (
                 TokenName.FAIL_STATE,
                 FailState(
-                    name=str(match.group("name")).strip(),
-                    message=str(match.group("message")).strip(),
+                    name=str(match["name"]).strip(),
+                    message=str(match["message"]).strip(),
                     code=code,
                     line_number=line_number,
                 ),
@@ -201,13 +211,13 @@ class Lexer(object):
         """
         Process the provided section header.
 
-        :param match: Regex match of the section header.
+        :param match: Regex matches of the section header.
         """
         self._tokens.append(
             (
                 TokenName.SECTION_HEADER,
                 SectionHeader(
-                    name=str(match.group("name").strip()),
+                    name=str(match["name"].strip()),
                     line_number=line_number,
                 ),
             )
@@ -217,15 +227,15 @@ class Lexer(object):
         """
         Process the provided transitions.
 
-        :param match: Regex match of the transitions.
+        :param match: Regex matches of the transitions.
         """
         self._tokens.append(
             (
                 TokenName.TRANSITION,
                 Transition(
-                    current_state=str(match.group("current")).strip(),
-                    condition=str(match.group("condition")).strip(),
-                    next_state=str(match.group("next")).strip(),
+                    current_state=str(match["current"]).strip(),
+                    condition=str(match["condition"]).strip(),
+                    next_state=str(match["next"]).strip(),
                     line_number=line_number,
                 ),
             )
