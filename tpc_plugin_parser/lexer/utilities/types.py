@@ -1,7 +1,8 @@
 """Module for aggregating all token types used in the lexer."""
 
-from typing import Callable, TypedDict
 import re
+from collections.abc import Callable
+from typing import TypedDict
 
 from tpc_plugin_parser.lexer.tokens.assignment import Assignment
 from tpc_plugin_parser.lexer.tokens.comment import Comment

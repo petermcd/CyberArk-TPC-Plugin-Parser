@@ -6,7 +6,7 @@ from tpc_plugin_parser.lexer.utilities.token_name import TokenName
 
 
 @dataclass(frozen=True)
-class Comment(object):
+class Comment:
     """Dataclass to hold a comment."""
 
     line_number: int
