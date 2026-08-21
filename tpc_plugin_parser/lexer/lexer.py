@@ -102,7 +102,7 @@ class Lexer:
 
         for line_number, line in enumerate(self._source.splitlines(), start=1):
             for token_spec in self._token_specs:
-                if match := token_spec["pattern"].match(string=line):
+                if match := token_spec["pattern"].match(line):
                     token_spec["processor"](match, line_number)
                     break
             else:
