@@ -6,7 +6,7 @@ from tpc_plugin_parser.lexer.utilities.token_name import TokenName
 
 
 @dataclass(frozen=True)
-class ParseError(object):
+class ParseError:
     """Dataclass to hold sparse errors."""
 
     line_number: int

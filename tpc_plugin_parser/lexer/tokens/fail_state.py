@@ -6,7 +6,7 @@ from tpc_plugin_parser.lexer.utilities.token_name import TokenName
 
 
 @dataclass(frozen=True)
-class FailState(object):
+class FailState:
     """Dataclass to hold a fail state."""
 
     line_number: int

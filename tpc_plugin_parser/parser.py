@@ -6,7 +6,7 @@ from tpc_plugin_parser.lexer.utilities.token_name import TokenName
 from tpc_plugin_parser.lexer.utilities.types import ALL_TOKEN_TYPES
 
 
-class Parser(object):
+class Parser:
     """Object to handle parsing ini files."""
 
     __slots__ = ("_file",)

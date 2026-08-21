@@ -6,7 +6,7 @@ from tpc_plugin_parser.lexer.utilities.token_name import TokenName
 
 
 @dataclass(frozen=True)
-class Assignment(object):
+class Assignment:
     """Dataclass to hold variable assignment details."""
 
     line_number: int

@@ -6,7 +6,7 @@ from tpc_plugin_parser.lexer.utilities.token_name import TokenName
 
 
 @dataclass(frozen=True)
-class SectionHeader(object):
+class SectionHeader:
     """Dataclass to hold a section header name."""
 
     line_number: int

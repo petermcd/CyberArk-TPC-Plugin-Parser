@@ -6,7 +6,7 @@ from tpc_plugin_parser.lexer.utilities.token_name import TokenName
 
 
 @dataclass(frozen=True)
-class Transition(object):
+class Transition:
     """Dataclass to hold state transitions."""
 
     line_number: int

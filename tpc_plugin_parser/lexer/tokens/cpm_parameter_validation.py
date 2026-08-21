@@ -6,7 +6,7 @@ from tpc_plugin_parser.lexer.utilities.token_name import TokenName
 
 
 @dataclass(frozen=True)
-class CPMParameterValidation(object):
+class CPMParameterValidation:
     """Dataclass to hold variable cpm parameter validation details."""
 
     line_number: int

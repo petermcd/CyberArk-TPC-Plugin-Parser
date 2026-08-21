@@ -34,13 +34,13 @@ _SECTION_HEADER_RE = re.compile(SECTION_HEADER, re.IGNORECASE)
 _TRANSITION_RE = re.compile(TRANSITION, re.IGNORECASE)
 
 
-class Lexer(object):
+class Lexer:
     """Object to handle processing the ini files."""
 
     __slots__ = (
-        "_tokens",
         "_source",
         "_token_specs",
+        "_tokens",
     )
 
     def __init__(self, source: str) -> None:
@@ -102,8 +102,8 @@ class Lexer(object):
 
         for line_number, line in enumerate(self._source.splitlines(), start=1):
             for token_spec in self._token_specs:
-                if match := token_spec["pattern"].match(line):
-                    token_spec["processor"](match=match, line_number=line_number)
+                if match := token_spec["pattern"].match(string=line):
+                    token_spec["processor"](match, line_number)
                     break
             else:
                 if line.strip():

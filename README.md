@@ -22,10 +22,10 @@ files as arguments:
 ```python
 from tpc_plugin_parser.parser import Parser
 
-with open('/path/to/files/process.ini') as process_fh:
+with open("/path/to/files/process.ini") as process_fh:
     process_content: str = process_fh.read()
-    
-with open('/path/to/files/prompts.ini') as prompts_fh:
+
+with open("/path/to/files/prompts.ini") as prompts_fh:
     prompts_content: str = prompts_fh.read()
 
 parser: Parser = Parser(process_file=process_content, prompts_file=prompts_content)

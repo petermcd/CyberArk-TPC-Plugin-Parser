@@ -1,10 +1,11 @@
 """Test the parser."""
 
 import pytest
+
 from tpc_plugin_parser.parser import Parser
 
 
-class TestParser(object):
+class TestParser:
     """Test the lexer."""
 
     @pytest.mark.parametrize(
