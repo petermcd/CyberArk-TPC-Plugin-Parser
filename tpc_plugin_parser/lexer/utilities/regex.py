@@ -7,6 +7,6 @@ CPM_PARAMETER_VALIDATION: str = (
     r"(?:\s*,\s*mandatory\s*=\s*(?P<mandatory>[^,]*))?"
     r"(?:\s*,\s*allowcharacters\s*=\s*(?P<allowcharacters>.*))?$"
 )
-FAIL_STATE: str = r"^\s*(?P<name>\w+)\s*=\s*fail\s*\(\s*(?P<message>.*),\s*(?P<code>[0-9]+)\)\s*$"
+FAIL_STATE: str = r"^\s*(?P<name>\w+)\s*=\s*fail\s*\(\s*(?P<message>.*),\s*(?P<code>[0-9]+)\s*\)\s*$"
 SECTION_HEADER: str = r"^\s*\[(?P<name>\w+(?:\s+\w+)*)]\s*$"
 TRANSITION: str = r"^\s*(?P<current>\w+)\s*,\s*(?P<condition>\w+)\s*,\s*(?P<next>\w+)\s*$"

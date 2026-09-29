@@ -12,7 +12,7 @@ class CPMParameterValidation:
     line_number: int
     name: str
     source: str
-    mandatory: str
+    mandatory: str = "no"
     allow_characters: str | None = None
     token_name: str = TokenName.CPM_PARAMETER_VALIDATION.value
 

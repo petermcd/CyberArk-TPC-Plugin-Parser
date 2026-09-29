@@ -38,21 +38,13 @@ class Parser:
 
         :return: Result of processing the lexed file.
         """
-        current_section_name: str = "default"
-        section_entries: list[ALL_TOKEN_TYPES,] = []
-        sorted_lex = {}
-        for lexed_line in lexed_file.tokens:
-            if lexed_line[0] == TokenName.SECTION_HEADER:
-                sorted_lex[current_section_name] = section_entries
-                if isinstance(lexed_line[1], SectionHeader):
-                    current_section_name = lexed_line[1].name
-                else:
-                    # This should never be reached, this is here to satisfy typing.
-                    current_section_name = "UNKNOWN"
-                section_entries = []
+        current: list[ALL_TOKEN_TYPES] = []
+        sorted_lex: dict[str, list[ALL_TOKEN_TYPES]] = {"default": current}
+        for token_name, token in lexed_file.tokens:
+            if token_name == TokenName.SECTION_HEADER and isinstance(token, SectionHeader):
+                current = sorted_lex.setdefault(token.name, [])
                 continue
-            section_entries.append(lexed_line[1])
-        sorted_lex[current_section_name] = section_entries
+            current.append(token)
         return sorted_lex
 
     @property
