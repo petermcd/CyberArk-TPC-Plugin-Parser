@@ -37,6 +37,21 @@ class TestLexer:
                 ],
             ),
             (
+                "password, source=FILE",
+                [
+                    (
+                        TokenName.CPM_PARAMETER_VALIDATION,
+                        CPMParameterValidation(
+                            line_number=1,
+                            name="password",
+                            source="FILE",
+                            mandatory="no",
+                            allow_characters=None,
+                        ),
+                    ),
+                ],
+            ),
+            (
                 "TestVar",
                 [
                     (
