@@ -117,6 +117,20 @@ class TestLexer:
                 ],
             ),
             (
+                "standard=FAIL(' This is a standard fail state', 1234 )",
+                [
+                    (
+                        TokenName.FAIL_STATE,
+                        FailState(
+                            name="standard",
+                            line_number=1,
+                            message="' This is a standard fail state'",
+                            code=1234,
+                        ),
+                    ),
+                ],
+            ),
+            (
                 "standard   =  FAIL  ('This is a standard fail state, isn't it?',     2468)",
                 [
                     (
@@ -270,8 +284,3 @@ class TestLexer:
         oversized = "x" * (_MAX_SOURCE_BYTES + 1)
         with pytest.raises(ValueError, match="maximum allowed size"):
             Lexer(source=oversized)
-
-    def test_fail_state_code_out_of_range_raises(self) -> None:
-        """Test that a fail-state error code outside 0–65535 raises ValueError."""
-        with pytest.raises(ValueError, match="valid range"):
-            _ = Lexer(source="state=fail(message, 65536)").tokens

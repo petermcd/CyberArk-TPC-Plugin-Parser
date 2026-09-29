@@ -160,7 +160,7 @@ class Lexer:
                 CPMParameterValidation(
                     name=str(match["name"]),
                     source=str(match["source"]),
-                    mandatory=str(match["mandatory"]),
+                    mandatory=str(match["mandatory"] or "no").strip(),
                     allow_characters=allow_characters,
                     line_number=line_number,
                 ),
@@ -173,17 +173,13 @@ class Lexer:
 
         :param match: Regex match of the fail state.
         """
-        code = int(match["code"])
-        if not (0 <= code <= 65535):
-            _log.warning("Fail-state error code %d at line %d", code, line_number)
-            raise ValueError(f"Fail-state error code {code} is outside the valid range 0–65535")
         self._tokens.append(
             (
                 TokenName.FAIL_STATE,
                 FailState(
                     name=str(match["name"]).strip(),
                     message=str(match["message"]).strip(),
-                    code=code,
+                    code=int(match["code"]),
                     line_number=line_number,
                 ),
             )

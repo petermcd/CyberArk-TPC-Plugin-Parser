@@ -40,7 +40,7 @@ class Parser:
         """
         current_section_name: str = "default"
         section_entries: list[ALL_TOKEN_TYPES,] = []
-        sorted_lex = {}
+        sorted_lex: dict[str, list[ALL_TOKEN_TYPES]] = {}
         for lexed_line in lexed_file.tokens:
             if lexed_line[0] == TokenName.SECTION_HEADER:
                 sorted_lex[current_section_name] = section_entries

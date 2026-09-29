@@ -16,7 +16,7 @@ class TestParser:
     )
     def test_process(self, target_file: str) -> None:
         """
-        Test to ensure that process file tokens parses ok.
+        Test to ensure that process file tokens parses OK.
 
         :param target_file: Path to the file.
         """
@@ -27,7 +27,7 @@ class TestParser:
 
         assert len(parser.parsed_file) == 6
         assert len(parser.parsed_file["default"]) == 6
-        assert len(parser.parsed_file["states"]) == 8
+        assert len(parser.parsed_file["states"]) == 9
         assert len(parser.parsed_file["transitions"]) == 7
         assert len(parser.parsed_file["CPM Parameters Validation"]) == 5
         assert len(parser.parsed_file["parameters"]) == 5
@@ -41,7 +41,7 @@ class TestParser:
     )
     def test_prompts(self, target_file: str) -> None:
         """
-        Test to ensure that prompts file tokens parses ok.
+        Test to ensure that prompts file tokens parses OK.
 
         :param target_file: Path to the file.
         """

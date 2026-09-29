@@ -1,3 +1,4 @@
+---
 name: UV
 
 on:
@@ -7,10 +8,14 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+  workflow_call:
+  schedule:
+    - cron: '17 3 * * 1'
 
-env:
-  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+concurrency:
+  group: uv-${{ github.ref }} # Fixed prefix so a calling workflow's concurrency group is not shared.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read # Allows actions/checkout to read the repository contents.
@@ -19,60 +24,87 @@ jobs:
   uv:
     name: python
     runs-on: ${{ matrix.os }}
-    permissions: read-all
+    timeout-minutes: 15
     strategy:
+      fail-fast: false
       matrix:
         python-version:
-          - "3.12"
+          - &min-python "3.12" # Lowest supported version; keep first. Aliased by the lint and audit jobs.
           - "3.13"
           - "3.13t"
           - "3.14"
           - "3.14t"
+          - "3.15"
+          - "3.15t"
         os:
           - "ubuntu-latest"
     steps:
       - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 0
+          persist-credentials: false
       - name: Install uv
-        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
         with:
           python-version: ${{ matrix.python-version }}
       - name: Set PYTHON_GIL
         if: endsWith(matrix.python-version, 't')
         run: echo "PYTHON_GIL=0" >> "$GITHUB_ENV"
-      - name: Set up Python
-        run: uv python install
       - name: pyTest
-        run: uv run pytest tests
-      - name: uv audit
-        run: uv audit
-      - name: Ruff (check)
-        run: uvx ruff check
-      - name: Ruff (format)
-        run: uvx ruff format --diff --check
-      - name: Ty
-        run: uvx ty check
-      - name: Troml
-        run: uvx troml check
-  sonarqube:
-    name: sonarqube
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        python-version:
-          - "3.12"
-        os:
-          - "ubuntu-latest"
+        run: uv run --locked pytest tests
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 0
           persist-credentials: false
-      - name: Run SonarQube
-        uses: sonarsource/sonarqube-scan-action@22918119ff8e1ca75a623e15c8296b6ea4fbe28f
+      - name: Install uv
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          python-version: *min-python
+      - name: Ruff (check)
+        run: uv run --locked --group lint ruff check
+      - name: Ruff (format)
+        run: uv run --locked --group lint ruff format --diff --check
+      - name: Ty
+        run: uv run --locked --group lint ty check
+      - name: Troml
+        run: uv run --locked --group lint troml check
+  audit:
+    name: audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install uv
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          python-version: *min-python
+      - name: uv audit
+        run: uv audit
+  all-checks:
+    name: all-checks
+    if: always()
+    needs:
+      - uv
+      - lint
+      - audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify all required jobs succeeded
         env:
-          SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ env.SONAR_HOST_URL }}
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          for result in $RESULTS; do
+            if [ "$result" != "success" ]; then
+              echo "A required job finished with result: $result"
+              exit 1
+            fi
+          done

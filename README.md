@@ -28,7 +28,9 @@ with open("/path/to/files/process.ini") as process_fh:
 with open("/path/to/files/prompts.ini") as prompts_fh:
     prompts_content: str = prompts_fh.read()
 
-parser: Parser = Parser(process_file=process_content, prompts_file=prompts_content)
-process_file_tokens = parser.process_file
-prompt_file_tokens = parser.prompts_file
+process_parser = Parser(file_contents=process_content)
+process_file_tokens = process_parser.parsed_file
+
+prompts_parser = Parser(file_contents=prompts_content)
+prompt_file_tokens = prompts_parser.parsed_file
 ```
